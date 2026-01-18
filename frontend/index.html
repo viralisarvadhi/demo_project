@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeGem | Jewellery App</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="app.router('home')">Luxe<span>Gem</span></a>
+            <nav>
+                <ul id="nav-links">
+                    <!-- Links injected by JS -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- Auth Section -->
+        <section id="auth-section" class="section">
+            <div class="auth-box">
+                <h2 id="auth-title">Login</h2>
+                <form id="auth-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="email" id="email" placeholder="Email (Register only)" style="display:none">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary" style="width: 100%">Submit</button>
+                </form>
+                <p style="margin-top: 15px; font-size: 14px;">
+                    <span id="auth-switch-text">Don't have an account?</span>
+                    <a href="#" style="color: var(--secondary)" onclick="toggleAuthMode()">Click here</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section id="shop-section" class="section">
+            <div id="product-list" class="products-grid">
+                <!-- Products injected here -->
+            </div>
+            <div id="pagination" class="pagination"></div>
+        </section>
+
+        <!-- Cart Section -->
+        <section id="cart-section" class="section">
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-content"></div>
+        </section>
+
+        <!-- Admin Section -->
+        <section id="admin-section" class="section">
+            <div class="admin-header">
+                <h2>Product Management</h2>
+                <button class="btn btn-primary" onclick="openModal(false)">+ Add New Product</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Material</th>
+                            <th>Carat</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Product</h3>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="edit-id">
+                <label>Name</label><input type="text" id="p-name" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div><label>Category</label>
+                        <select id="p-category" required>
+                            <option value="Ring">Ring</option>
+                            <option value="Necklace">Necklace</option>
+                            <option value="Earring">Earring</option>
+                            <option value="Diamond">Diamond</option>
+                        </select>
+                    </div>
+                    <div><label>Material</label><input type="text" id="p-material" required></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div><label>Gem Type</label><input type="text" id="p-gem"></div>
+                    <div><label>Color</label><input type="text" id="p-color"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div><label>Carat</label><input type="number" step="0.01" id="p-carat" required></div>
+                    <div><label>Cut</label><input type="text" id="p-cut"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div><label>Price</label><input type="number" id="p-price" required></div>
+                    <div><label>Stock</label><input type="number" id="p-stock" required></div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action Successful</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
