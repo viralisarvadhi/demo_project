@@ -201,7 +201,6 @@ function loadProducts() {
                 var p = data.products[i];
                 var cardHTML = `
                 <div class="product-card">
-                    <img src="${p.image_url}" class="product-img">
                     <div class="product-info">
                         <span class="product-cat">${p.category}</span>
                         <h3 class="product-title">${p.name}</h3>
@@ -239,6 +238,13 @@ function changePage(pageNum) {
 
 // --- CART LOGIC ---
 function addToCart(id, name, price) {
+    // Check if user is logged in
+    if (!currentUser) {
+        alert('Please login to add items to cart');
+        showSection('auth');
+        return;
+    }
+
     var found = false;
     // Check if item already exists
     for (var i = 0; i < cart.length; i++) {
