@@ -1,31 +1,17 @@
 const pool = require('../config/db');
 
-// Get all products with search and pagination
+// Get all products with pagination
 const getProducts = async (req, res) => {
-    const { page = 1, limit = 6, search = '', category = '' } = req.query;
+    const { page = 1, limit = 6 } = req.query;
     const offset = (page - 1) * limit;
 
     try {
-        let query = 'SELECT * FROM products WHERE 1=1';
-        let countQuery = 'SELECT COUNT(*) FROM products WHERE 1=1';
-        const params = [];
-
-        if (search) {
-            params.push(`%${search}%`);
-            query += ` AND (name ILIKE $${params.length} OR material ILIKE $${params.length})`;
-            countQuery += ` AND (name ILIKE $${params.length} OR material ILIKE $${params.length})`;
-        }
-        if (category) {
-            params.push(category);
-            query += ` AND category = $${params.length}`;
-            countQuery += ` AND category = $${params.length}`;
-        }
-
-        params.push(limit, offset);
-        query += ` ORDER BY id DESC LIMIT $${params.length - 1} OFFSET $${params.length}`;
+        let query = 'SELECT * FROM products ORDER BY id DESC LIMIT $1 OFFSET $2';
+        let countQuery = 'SELECT COUNT(*) FROM products';
+        const params = [limit, offset];
 
         const data = await pool.query(query, params);
-        const countResult = await pool.query(countQuery, params.slice(0, -2)); // Use same params without limit/offset
+        const countResult = await pool.query(countQuery);
 
         res.json({
             products: data.rows,
@@ -40,22 +26,11 @@ const getProducts = async (req, res) => {
 const createProduct = async (req, res) => {
     const { name, category, material, gem_type, color, carat, cut, stock, price } = req.body;
 
-    // Generate jewelry-related image based on category
-    const jewelryKeywords = {
-        'Ring': 'engagement-ring',
-        'Necklace': 'necklace',
-        'Earring': 'earrings',
-        'Diamond': 'diamond'
-    };
-
-    const keyword = jewelryKeywords[category] || 'jewelry';
-    const image_url = `https://source.unsplash.com/300x300/?${keyword},luxury&sig=${Date.now()}`;
-
     try {
         const result = await pool.query(
-            `INSERT INTO products (name, category, material, gem_type, color, carat, cut, stock, price, image_url) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
-            [name, category, material, gem_type, color, carat, cut, stock, price, image_url]
+            `INSERT INTO products (name, category, material, gem_type, color, carat, cut, stock, price) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+            [name, category, material, gem_type, color, carat, cut, stock, price]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
